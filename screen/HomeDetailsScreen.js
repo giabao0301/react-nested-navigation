@@ -1,10 +1,46 @@
 // Trịnh Gia Bảo - 21521866
-import React from 'react';
-import {View, Text, StyleSheet} from 'react-native';
-const HomeDetailsScreen = () => {
+import React, {useLayoutEffect} from 'react';
+import {View, Text, StyleSheet, Image} from 'react-native';
+import FontAwsome from 'react-native-vector-icons/FontAwesome';
+
+const HomeDetailsScreen = props => {
+  const {...productDetails} = props.route.params.data;
+  React.useLayoutEffect(() => {
+    if (!props.navigation || !props.route) return;
+    console.log(props.navigation);
+    const drawerNavigator = props.navigation.getParent('Home');
+
+    if (drawerNavigator) {
+      if (props.route.name === 'HomeDetails') {
+        drawerNavigator.setOptions({
+          headerShown: false,
+        });
+      }
+    }
+
+    return drawerNavigator
+      ? () => {
+          drawerNavigator.setOptions({
+            headerShown: true,
+          });
+        }
+      : undefined;
+  }, [props.navigation, props.route]);
   return (
     <View style={styles.body}>
-      <Text style={styles.text}>Home Details Screen</Text>
+      <Image style={styles.image} source={{uri: productDetails.productImage}} />
+      <Text style={styles.textBold}>{productDetails.productName}</Text>
+      <Text style={styles.text}>{productDetails.productDescription}</Text>
+      <Text style={styles.textBold}>Price: ${productDetails.productPrice}</Text>
+      <View style={styles.rating}>
+        <Text style={styles.textBold}>
+          Rating: {productDetails.productRating}
+        </Text>
+        <FontAwsome name="star" size={20} color="#FFD700" />
+        <Text style={styles.textBold}>
+          ({productDetails.productRatingCount} reviews)
+        </Text>
+      </View>
     </View>
   );
 };
@@ -13,10 +49,24 @@ export default HomeDetailsScreen;
 const styles = StyleSheet.create({
   body: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: 'space-between',
+    margin: 10,
+    marginTop: 0,
+  },
+  image: {
+    width: '100%',
+    height: '50%',
   },
   text: {
     color: '#000',
+  },
+  textBold: {
+    color: '#000',
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  rating: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 });

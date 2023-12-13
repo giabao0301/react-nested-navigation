@@ -46,21 +46,6 @@ const LoginScreen = ({navigation}) => {
       </TouchableOpacity>
 
       <MainButton title="LOG IN" onPress={loginHandler} />
-      {/* Trịnh Gia Bảo - 21521866 */}
-      <View style={styles.loginOption}>
-        <Text style={styles.blackBoldText}>Or login with</Text>
-        <View style={styles.logoOptionLogo}>
-          <Image
-            style={styles.logo}
-            source={require('../assets/facebook_logo.png')}
-          />
-          <Image
-            style={styles.logo}
-            source={require('../assets/google_logo.png')}
-          />
-        </View>
-      </View>
-
       <BottomLine
         content={`Don't have an account?`}
         action="Sign up here!"
@@ -81,21 +66,6 @@ const styles = StyleSheet.create({
     padding: 40,
   },
 
-  loginOption: {
-    alignItems: 'center',
-    marginBottom: 20,
-  },
-  logoOptionLogo: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    margin: 10,
-  },
-  logo: {
-    width: 60,
-    height: 60,
-    margin: 10,
-    borderRadius: 50,
-  },
   // Trịnh Gia Bảo - 21521866
   forgotPassword: {
     alignSelf: 'flex-end',
