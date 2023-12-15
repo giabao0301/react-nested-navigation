@@ -1,13 +1,12 @@
 // Trịnh Gia Bảo - 21521866
 import React, {useLayoutEffect} from 'react';
-import {View, Text, StyleSheet, Image} from 'react-native';
+import {View, Text, StyleSheet, Image, ScrollView} from 'react-native';
 import FontAwsome from 'react-native-vector-icons/FontAwesome';
 
-const HomeDetailsScreen = props => {
+const ProductDetailsScreen = props => {
   const {...productDetails} = props.route.params.data;
   React.useLayoutEffect(() => {
     if (!props.navigation || !props.route) return;
-    console.log(props.navigation);
     const drawerNavigator = props.navigation.getParent('Home');
 
     if (drawerNavigator) {
@@ -29,23 +28,27 @@ const HomeDetailsScreen = props => {
   return (
     <View style={styles.body}>
       <Image style={styles.image} source={{uri: productDetails.productImage}} />
-      <Text style={styles.textBold}>{productDetails.productName}</Text>
-      <Text style={styles.text}>{productDetails.productDescription}</Text>
-      <Text style={styles.textBold}>Price: ${productDetails.productPrice}</Text>
-      <View style={styles.rating}>
+      <ScrollView>
+        <Text style={styles.textBold}>{productDetails.productName}</Text>
+        <Text style={styles.text}>{productDetails.productDescription}</Text>
         <Text style={styles.textBold}>
-          Rating: {productDetails.productRating}
+          Price: ${productDetails.productPrice}
         </Text>
-        <FontAwsome name="star" size={20} color="#FFD700" />
-        <Text style={styles.textBold}>
-          ({productDetails.productRatingCount} reviews)
-        </Text>
-      </View>
+        <View style={styles.rating}>
+          <Text style={styles.textBold}>
+            Rating: {productDetails.productRating}
+          </Text>
+          <FontAwsome name="star" size={20} color="#FFD700" />
+          <Text style={styles.textBold}>
+            ({productDetails.productRatingCount} reviews)
+          </Text>
+        </View>
+      </ScrollView>
     </View>
   );
 };
 
-export default HomeDetailsScreen;
+export default ProductDetailsScreen;
 const styles = StyleSheet.create({
   body: {
     flex: 1,

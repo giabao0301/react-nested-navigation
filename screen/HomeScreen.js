@@ -71,7 +71,7 @@ const HomeScreen = ({navigation}) => {
     );
   }
   if (error) {
-    content = <Text>{error}</Text>;
+    content = <Text style={{color: 'red'}}>{error}</Text>;
   }
 
   return <View style={styles.body}>{content}</View>;

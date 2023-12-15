@@ -1,21 +1,19 @@
 import React, {useEffect, useState, useCallback} from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  ActivityIndicator,
-  ScrollView,
-  Pressable,
-  Image,
-} from 'react-native';
+import {View, Text, StyleSheet, ActivityIndicator} from 'react-native';
 import ProductList from '../components/Home/ProductList';
+import Categories from '../components/Categories/Categories';
 
 const CategoriesScreen = ({navigation}) => {
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState('all');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  const selectedCategoryHandler = category => {
+    setSelectedCategory(category);
+  };
+  console.log(selectedCategory);
   const fetchCategories = useCallback(async () => {
     try {
       const response = await fetch(
@@ -30,33 +28,28 @@ const CategoriesScreen = ({navigation}) => {
     }
   }, []);
 
-  let categoriesList = <Text>No categories found!</Text>;
+  let categoriesList = <Text style={{color: 'red'}}>No categories found!</Text>;
+
   if (categories.length > 0) {
     categoriesList = (
-      <View style={styles.categories}>
-        <View style={styles.category}>
-          <Image
-            source={require('../assets/icons/category.png')}
-            style={styles.icon}
-          />
-          <Text style={styles.text}>All</Text>
-        </View>
-        <ScrollView horizontal={true}>
-          {categories.map((item, index) => {
-            return (
-              <Pressable key={index}>
-                <Text style={styles.text}>{item}</Text>
-              </Pressable>
-            );
-          })}
-        </ScrollView>
-      </View>
+      <Categories
+        categories={categories}
+        onSelectedCategory={selectedCategoryHandler}
+      />
     );
   }
 
-  if (error) {
-    categoriesList = <Text>{error}</Text>;
+  if (isLoading) {
+    categoriesList = '';
   }
+
+  if (error) {
+    categoriesList = <Text style={{color: 'red'}}>{error}</Text>;
+  }
+
+  useEffect(() => {
+    fetchCategories();
+  }, [fetchCategories]);
 
   const fetchProducts = useCallback(async () => {
     setIsLoading(true);
@@ -76,17 +69,22 @@ const CategoriesScreen = ({navigation}) => {
           image: data[key].image,
           rating: data[key].rating,
           description: data[key].description,
+          category: data[key].category,
         });
+      }
+      if (selectedCategory !== 'all') {
+        loadedProducts = loadedProducts.filter(
+          item => item.category === selectedCategory,
+        );
       }
       setProducts(loadedProducts);
     } catch (error) {
       setError(error.message);
     }
     setIsLoading(false);
-  }, []);
+  }, [selectedCategory]);
 
   useEffect(() => {
-    fetchCategories();
     fetchProducts();
   }, [fetchProducts]);
 
@@ -104,7 +102,7 @@ const CategoriesScreen = ({navigation}) => {
     );
   }
   if (error) {
-    content = <Text>{error}</Text>;
+    content = <Text style={{color: 'red'}}>{error}</Text>;
   }
 
   return (
@@ -119,21 +117,5 @@ export default CategoriesScreen;
 const styles = StyleSheet.create({
   body: {
     flex: 1,
-  },
-  categories: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    margin: 10,
-  },
-  category: {
-    alignItems: 'center',
-  },
-  text: {
-    color: '#000',
-    marginHorizontal: 10,
-  },
-  icon: {
-    width: 40,
-    height: 40,
   },
 });
